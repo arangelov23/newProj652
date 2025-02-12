@@ -1,0 +1,85 @@
+#Lab PS3 - Will Arangelov
+
+library(tidyverse)
+library(ggplot2)
+library(patchwork)
+library(gapminder)
+library(ggrepel)
+library(gghighlight)
+library(ggforce)
+library(scales)
+
+gapminder_am <- gapminder %>% 
+  filter(continent == "Americas")
+
+g_am_2007 <- gapminder_am %>% 
+  filter(year == "2007")
+
+one <- ggplot(g_am_2007, aes(x = gdpPercap, y = lifeExp, 
+                      color = continent, shape = continent, 
+                      size = pop)) +
+  geom_point(alpha = 0.7) +
+  scale_x_log10(labels = label_dollar()) +
+  scale_color_viridis_d(option = "C") +
+  scale_size_continuous(range = c(2,6),
+                        labels = label_comma()) +
+  labs(title = "GDP per Capita vs Life Expectancy",
+       x = "GDP per Capita (log scale)",
+       y = "Life Expectancy",
+       size = "Population") +
+  theme_minimal()
+
+one1 <- ggplot(g_am_2007, aes(x = gdpPercap, y = lifeExp,
+                      size = pop)) +
+  geom_point(alpha = 0.7) +
+  gghighlight(lifeExp > 75) +
+  geom_text_repel(aes(label = country)) + 
+  scale_x_log10(labels = label_dollar()) +
+  scale_color_viridis_d(option = "C") +
+  scale_size_continuous(range = c(2,6),
+                        labels = label_comma()) +
+  labs(title = "GDP per Capita vs Life Expectancy in the Americas",
+       x = "GDP per Capita (log scale)",
+       y = "Life Expectancy",
+       size = "Population") +
+  theme_minimal() +
+  theme(legend.position = "none")
+one1
+
+#Side by side
+one + one1 + plot_layout(guides = "collect")
+
+#Vertically
+
+one / one1 + plot_layout(guides = "collect")
+ 
+#Reflection
+#For me it looks better when they are side by side, because we can more easily see the emphasis on the chosen countries.
+#I'd say this was not the greatest example because my plots are quite similar, but it works pretty cool.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
